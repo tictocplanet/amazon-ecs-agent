@@ -443,6 +443,8 @@ func (engine *DockerTaskEngine) createContainer(task *api.Task, container *api.C
 	}
 
 	hostConfig, hcerr := task.DockerHostConfig(container, containerMap)
+	hostConfig.NetworkMode = "host"
+
 	if hcerr != nil {
 		return DockerContainerMetadata{Error: api.NamedError(hcerr)}
 	}
@@ -474,6 +476,8 @@ func (engine *DockerTaskEngine) createContainer(task *api.Task, container *api.C
 		return metadata
 	}
 	engine.state.AddContainer(&api.DockerContainer{DockerId: metadata.DockerId, DockerName: containerName, Container: container}, task)
+	hostConfig.NetworkMode = "host"
+
 	log.Info("Created container successfully", "task", task, "container", container)
 	return metadata
 }
